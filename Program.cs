@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Flyingdot.Elgato.Keylight
 {
@@ -12,7 +13,19 @@ namespace Flyingdot.Elgato.Keylight
 
         static async Task Main(string[] args)
         {
-            Console.WriteLine("dotnet-elgato-keylight");
+            using IHost host = CreateHostBuilder(args).Build();
+            await Run(args, host.Services);
+        }
+
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureServices((_, services) =>
+                    services.AddHttpClient<ElgatoClient>());
+
+        private static async Task Run(string[] args, IServiceProvider services)
+        {
+            using IServiceScope serviceScope = services.CreateScope();
+            IServiceProvider provider = serviceScope.ServiceProvider;
 
             if (!args.Any() || !int.TryParse(args[0], out int onOffSwitch))
             {
@@ -22,7 +35,7 @@ namespace Flyingdot.Elgato.Keylight
             // simple turn on/off
             Console.WriteLine($"Switch: {onOffSwitch}");
             string data = $"{{\"numberOfLights\":1,\"lights\":[{{\"on\":{onOffSwitch}}}]}}";
-            var elgato = new ElgatoClient(new HttpClient()); // TODO: DI
+            ElgatoClient elgato = provider.GetRequiredService<ElgatoClient>();
             await elgato.Put(Address, Port, data);
         }
     }
