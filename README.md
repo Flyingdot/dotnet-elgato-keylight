@@ -3,8 +3,8 @@
 ## Usage
 ```bash
 # turn on
-./dotnetelgatokeylight 1
+./dotnetelgatokeylight on
 
 # turn off
-./dotnetelgatokeylight 0
+./dotnetelgatokeylight off
 ```

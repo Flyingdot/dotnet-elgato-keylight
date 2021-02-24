@@ -27,14 +27,15 @@ namespace Flyingdot.Elgato.Keylight
             using IServiceScope serviceScope = services.CreateScope();
             IServiceProvider provider = serviceScope.ServiceProvider;
 
-            if (!args.Any() || !int.TryParse(args[0], out int onOffSwitch))
+            int command = 1;
+            string[] knownCommands = { "off", "on" };
+            if (args.Any())
             {
-                onOffSwitch = 1;
+                command = Math.Abs(Array.IndexOf(knownCommands, args.First()));
             }
 
-            // simple turn on/off
-            Console.WriteLine($"Switch: {onOffSwitch}");
-            string data = $"{{\"numberOfLights\":1,\"lights\":[{{\"on\":{onOffSwitch}}}]}}";
+            Console.WriteLine($"Switch: {command}");
+            string data = $"{{\"numberOfLights\":1,\"lights\":[{{\"on\":{command}}}]}}";
             ElgatoClient elgato = provider.GetRequiredService<ElgatoClient>();
             await elgato.Put(Address, Port, data);
         }
