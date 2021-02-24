@@ -3,18 +3,19 @@ using System.Threading.Tasks;
 
 namespace Flyingdot.Elgato.Keylight
 {
-    public class ElgatoClient
+    public class ElgatoApiClient
     {
         private readonly HttpClient _httpClient;
 
-        public ElgatoClient(HttpClient httpClient)
+        public ElgatoApiClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        public async Task Put(string address, int port, string data)
+        public async Task Put(string data)
         {
-            HttpResponseMessage responseMessage = await _httpClient.PutAsync($"http://{address}:{port}/elgato/lights",
+            HttpResponseMessage responseMessage = await _httpClient.PutAsync(
+                $"{_httpClient.BaseAddress}elgato/lights",
                 new StringContent(data));
             responseMessage.EnsureSuccessStatusCode();
         }

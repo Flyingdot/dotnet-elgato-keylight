@@ -1,5 +1,8 @@
 ﻿using System;
-using System.Linq;
+using System.CommandLine;
+using System.CommandLine.Builder;
+using System.CommandLine.Hosting;
+using System.CommandLine.Parsing;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,32 +15,33 @@ namespace Flyingdot.Elgato.Keylight
         private const int Port = 9123;
 
         static async Task Main(string[] args)
+            => await BuildCommandline()
+                .UseHost(_ => Host.CreateDefaultBuilder(),
+                    host =>
+                    {
+                        host.ConfigureServices(services =>
+                        {
+                            services
+                                .AddTransient<IElgato, Elgato>()
+                                .AddHttpClient<ElgatoApiClient>(client =>
+                                {
+                                    client.BaseAddress = new Uri($"http://{Address}:{Port}");
+                                });
+                        }).UseCommandHandler<RootCommand, RootCommandHandler>();
+                    })
+                .UseDefaults()
+                .Build()
+                .InvokeAsync(args);
+
+        private static CommandLineBuilder BuildCommandline()
         {
-            using IHost host = CreateHostBuilder(args).Build();
-            await Run(args, host.Services);
-        }
-
-        private static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureServices((_, services) =>
-                    services.AddHttpClient<ElgatoClient>());
-
-        private static async Task Run(string[] args, IServiceProvider services)
-        {
-            using IServiceScope serviceScope = services.CreateScope();
-            IServiceProvider provider = serviceScope.ServiceProvider;
-
-            int command = 1;
-            string[] knownCommands = { "off", "on" };
-            if (args.Any())
+            var root = new RootCommand(@"TODO description")
             {
-                command = Math.Abs(Array.IndexOf(knownCommands, args.First()));
-            }
+                new Option<bool>("--on", () => false),
+                new Option<bool>("--off", () => false)
+            };
 
-            Console.WriteLine($"Switch: {command}");
-            string data = $"{{\"numberOfLights\":1,\"lights\":[{{\"on\":{command}}}]}}";
-            ElgatoClient elgato = provider.GetRequiredService<ElgatoClient>();
-            await elgato.Put(Address, Port, data);
+            return new CommandLineBuilder(root);
         }
     }
 }
