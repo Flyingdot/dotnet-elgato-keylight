@@ -15,8 +15,19 @@ namespace Flyingdot.Elgato.Keylight
 
         public async Task<int> InvokeAsync(InvocationContext context)
         {
-            Console.WriteLine("!!!!");
-            await _elgato.TurnOn();
+            var onValue = context.ParseResult.ValueForOption<bool>("--on");
+            var offValue = context.ParseResult.ValueForOption<bool>("--off");
+            try
+            {
+                if (onValue) await _elgato.TurnOn();
+                else if (offValue) await _elgato.TurnOff();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
             return 0;
         }
     }
