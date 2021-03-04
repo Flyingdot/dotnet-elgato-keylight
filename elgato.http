@@ -1,0 +1,26 @@
+###
+GET http://{{ip}}:{{port}}/elgato/accessory-info
+
+###
+GET http://{{ip}}:{{port}}/elgato/lights
+
+###
+PUT http://{{ip}}:{{port}}/elgato/lights
+
+{
+    "numberOfLights": 1,
+    "lights": [{
+        "on": 1,
+        "brightness": 75
+    }]
+}
+
+###
+PUT http://{{ip}}:{{port}}/elgato/lights
+
+{
+    "numberOfLights": 1,
+    "lights": [{
+        "on": 0
+    }]
+}

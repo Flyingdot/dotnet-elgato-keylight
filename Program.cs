@@ -38,7 +38,8 @@ namespace Flyingdot.Elgato.Keylight
             var root = new RootCommand(@"TODO description")
             {
                 new Option<bool>("--on", () => false),
-                new Option<bool>("--off", () => false)
+                new Option<bool>("--off", () => false),
+                new Option<int>("--brightness", () => -1)
             };
 
             return new CommandLineBuilder(root);
