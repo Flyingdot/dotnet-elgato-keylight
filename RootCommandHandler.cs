@@ -18,10 +18,11 @@ namespace Flyingdot.Elgato.Keylight
             bool onValue = context.ParseResult.ValueForOption<bool>("--on");
             bool offValue = context.ParseResult.ValueForOption<bool>("--off");
             int brightnessValue = context.ParseResult.ValueForOption<int>("--brightness");
+            int temperaturerValue = context.ParseResult.ValueForOption<int>("--temperature");
 
             try
             {
-                if (onValue && brightnessValue > -1) await _elgato.TurnOn(brightnessValue);
+                if (onValue && brightnessValue > -1 && temperaturerValue > -1) await _elgato.TurnOn(brightnessValue, temperaturerValue);
                 else if (onValue) await _elgato.TurnOn();
                 else if (offValue) await _elgato.TurnOff();
             }

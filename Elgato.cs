@@ -11,7 +11,7 @@ namespace Flyingdot.Elgato.Keylight
             _apiClient = apiClient;
         }
 
-        public async Task TurnOn(int brightnessValue = -1)
+        public async Task TurnOn(int brightnessValue = -1, int temperaturerValue = -1)
         {
             await _apiClient.Put($"{{\"numberOfLights\": 1, \"lights\":[{{\"on\": 1, \"brightness\": {brightnessValue}}}]}}");
         }
