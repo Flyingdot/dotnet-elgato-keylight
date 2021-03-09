@@ -22,9 +22,9 @@ namespace Flyingdot.Elgato.Keylight
 
             try
             {
-                if (onValue && brightnessValue > -1 && temperaturerValue > -1) await _elgato.TurnOn(brightnessValue, temperaturerValue);
+                if (!offValue) await _elgato.TurnOn(brightnessValue, temperaturerValue);
                 else if (onValue) await _elgato.TurnOn();
-                else if (offValue) await _elgato.TurnOff();
+                else await _elgato.TurnOff();
             }
             catch (Exception e)
             {

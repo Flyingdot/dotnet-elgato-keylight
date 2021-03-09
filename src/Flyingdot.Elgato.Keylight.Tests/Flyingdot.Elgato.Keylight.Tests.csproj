@@ -19,4 +19,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Flyingdot.Elgato.Keylight\Flyingdot.Elgato.Keylight.csproj" />
+  </ItemGroup>
+
 </Project>
