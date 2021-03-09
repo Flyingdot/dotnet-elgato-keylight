@@ -1,5 +1,7 @@
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Flyingdot.Elgato.Keylight.Model;
 
 namespace Flyingdot.Elgato.Keylight
 {
@@ -12,11 +14,12 @@ namespace Flyingdot.Elgato.Keylight
             _httpClient = httpClient;
         }
 
-        public async Task Put(string data)
+        public async Task Put(ElgatoRequest request)
         {
+            string json = JsonSerializer.Serialize<ElgatoRequest>(request);
             HttpResponseMessage responseMessage = await _httpClient.PutAsync(
                 $"{_httpClient.BaseAddress}elgato/lights",
-                new StringContent(data));
+                new StringContent(json));
             responseMessage.EnsureSuccessStatusCode();
         }
     }

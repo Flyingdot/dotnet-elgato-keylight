@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Flyingdot.Elgato.Keylight.Model;
 
 namespace Flyingdot.Elgato.Keylight
 {
@@ -13,12 +14,23 @@ namespace Flyingdot.Elgato.Keylight
 
         public async Task TurnOn(int brightnessValue = -1, int temperatureValue = -1)
         {
-            await _apiClient.Put($"{{\"numberOfLights\": 1, \"lights\":[{{\"on\": 1, \"brightness\": {brightnessValue}, \"temperature\": {temperatureValue}}}]}}");
+            await _apiClient.Put(new ElgatoRequest
+                {
+                    Lights = new[]
+                    {
+                        new Light {On = 1, Brightness = brightnessValue, Temperature = temperatureValue}
+                    }
+                }
+            );
         }
 
         public async Task TurnOff()
         {
-            await _apiClient.Put("{\"numberOfLights\": 1, \"lights\":[{\"on\": 0}]}");
+            await _apiClient.Put(new ElgatoRequest
+                {
+                    Lights = new[] {new Light {On = 0}}
+                }
+            );
         }
     }
 }
