@@ -42,7 +42,7 @@ namespace Flyingdot.Elgato.Keylight
                 new Option<bool>("--off", () => false),
                 new Option<int>("--brightness", () => -1) // 0-100
                     .FromAmong(Enumerable.Range(0, 101).Select(n => n.ToString()).ToArray()),
-                new Option<int>("--temperature", () => -1) // 3000k - 7000k
+                new Option<int>("--temperature", () => 3000) // 3000k - 7000k
                     .FromAmong(Enumerable.Range(3000, 4000).Select(n => n.ToString()).ToArray())
             };
 
