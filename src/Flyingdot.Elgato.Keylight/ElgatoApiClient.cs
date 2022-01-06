@@ -1,5 +1,7 @@
 using System;
+using System.Dynamic;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Flyingdot.Elgato.Keylight.Model;
@@ -31,6 +33,21 @@ namespace Flyingdot.Elgato.Keylight
             catch (HttpRequestException e)
             {
                 _logger.LogError("Elgato API Request failed: {ErrorMessage}", e.Message);
+            }
+        }
+
+        public async Task<ElgatoResponse> Get()
+        {
+            try
+            {
+                var response = await _httpClient.GetFromJsonAsync<ElgatoResponse>(
+                    $"{_httpClient.BaseAddress}elgato/lights");
+                return response;
+            }
+            catch (HttpRequestException e)
+            {
+                _logger.LogError("Elgato API Request failed: {ErrorMessage}", e.Message);
+                throw;
             }
         }
     }
